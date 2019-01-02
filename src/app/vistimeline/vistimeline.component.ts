@@ -13,31 +13,35 @@ export class VistimelineComponent implements OnInit {
   timeline: any;
   data: any;
   options: {};
+  
 
   constructor() { 
     this.getTimelineData();
   }
 
   ngOnInit() {
+    
   }
 
   ngAfterViewInit() {     
     this.tlContainer = this.timelineContainer.nativeElement;       
-    this.timeline = new vis.Timeline(this.tlContainer, this.data, {});  
+    this.timeline = new vis.Timeline(this.tlContainer, this.data, this.options);  
+    
+    
   }
 
 getTimelineData() {
       // Create a DataSet (allows two way data-binding)
       this.data = new vis.DataSet([
-         {id: 1, content: 'item1', start: '2018-05-01'},
+         {id: 1, content: 'item1', start: '2018-12-29' },
        
         
       ]);
       
-    
-      this.options = {
-        editable: true,
+        this.options = {
+        editable: true,// add/remove item
         showTooltips: true,
+        clickToUse: true,
         tooltip: {
           followMouse: true,
           overflowMethod: 'cap'
@@ -47,14 +51,8 @@ getTimelineData() {
           axis: 40
         }
       };
-      // Configuration for the Timeline
-      /*this.options = {
-        width: '100%',
-        height: '30px',
-        margin: {
-          item: 20
-        }
-      };*/
-
+      
   }
+    
+
 }
