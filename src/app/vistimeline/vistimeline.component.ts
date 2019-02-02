@@ -56,6 +56,7 @@ export class VistimelineComponent implements OnInit {
       editable: true,// add/remove item
       showTooltips: true,
       clickToUse: true,
+      align:'center',
      
 
       onAdd: (newItem, callback) => {
