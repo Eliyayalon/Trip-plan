@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { BsDatepickerModule, BsDropdownModule, ModalModule, PopoverModule } from 'ngx-bootstrap';
 import { VistimelineComponent } from './vistimeline/vistimeline.component';
-
+import {Location} from './location'
 
 @NgModule({
   declarations: [
