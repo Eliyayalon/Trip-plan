@@ -16,6 +16,7 @@ export class VistimelineComponent implements OnInit {
   fatherItem: string[];
 
 
+
   constructor() {
     this.getTimelineData();
 
@@ -39,6 +40,7 @@ export class VistimelineComponent implements OnInit {
 
 
   }
+  
 
 
   getTimelineData() {
@@ -186,3 +188,4 @@ export class VistimelineComponent implements OnInit {
 
 
 }
+
