@@ -7,12 +7,15 @@ import { AppComponent } from './app.component';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { BsDatepickerModule, BsDropdownModule, ModalModule, PopoverModule } from 'ngx-bootstrap';
 import { VistimelineComponent } from './vistimeline/vistimeline.component';
-import {Location} from './location'
+import {Location} from './location';
+import { ExportCsvComponent } from './services/export-csv/export-csv.component'
+import { IgxCsvExporterService } from 'igniteui-angular';
 
 @NgModule({
   declarations: [
   AppComponent,
   VistimelineComponent,
+  ExportCsvComponent,
     
   ],
   imports: [
@@ -23,6 +26,7 @@ import {Location} from './location'
     ReactiveFormsModule,
     BrowserModule
   ],
+  providers: [IgxCsvExporterService],
   entryComponents: [],
   bootstrap: [AppComponent]
 })

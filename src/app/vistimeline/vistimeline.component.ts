@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+//import { ExportToCsv } from 'export-to-csv';
 declare var vis: any;
 
 @Component({
@@ -56,8 +57,21 @@ export class VistimelineComponent implements OnInit {
       editable: true,// add/remove item
       showTooltips: true,
       clickToUse: true,
+      //multiselect:true,
       align:'center',
-     
+
+
+
+
+    //   fieldSeparator: ',',
+    // quoteStrings: '"',
+    // decimalSeparator: '.',
+    // showLabels: true, 
+    // showTitle: true,
+    // title: 'My Awesome CSV',
+    // useTextFile: false,
+    // useBom: true,
+    // useKeysAsHeaders: true,
 
       onAdd: (newItem, callback) => {
         //debugger;
@@ -133,13 +147,10 @@ export class VistimelineComponent implements OnInit {
         }
       },
       onRemove:  (item, callback) =>{ //change name of item
-        if (item.fatherItem){
-          for (var i =0; i<item.fatherItem.length;i++) {
-            for (var j=0;j<item.fatherItem[i].children.length; j++){
-              if (item.fatherItem[i].children[j].id == item.id){
-                item.fatherItem[i].children.splice(j,1);
-              }
-            }
+        if (item.children.length>0){
+          for (var i =0; i<item.children.length;i++) {
+            item.timeline.itemsData.remove(item.children[i]);
+ 
           }
         }
         callback(item);
@@ -187,6 +198,11 @@ export class VistimelineComponent implements OnInit {
 
   }
 
-
 }
+
+// const csvExporter = new ExportToCsv(this.options);
+
+// csvExporter.generateCsv(this.data);
+
+
 
