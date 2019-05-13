@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Node } from './models/models';
 
 
 @Component({
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-
+  public root: Node;
   constructor() { }
 
   ngOnInit() {

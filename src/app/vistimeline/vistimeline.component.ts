@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
+import { Node } from '../models/models';
 //import { ExportToCsv } from 'export-to-csv';
 declare var vis: any;
 
@@ -8,7 +9,7 @@ declare var vis: any;
   styleUrls: ['./vistimeline.component.css']
 })
 export class VistimelineComponent implements OnInit {
-
+  @Input() root: Node;
   @ViewChild("visjsTimeline") timelineContainer: ElementRef;
   tlContainer: any;
   timeline: any;
@@ -46,8 +47,9 @@ export class VistimelineComponent implements OnInit {
 
   getTimelineData() {
     // Create a DataSet (allows two way data-binding)
+
     this.data = new vis.DataSet([
-      { id: 1, content: 'item1', start: new Date(2018, 12, 23), oldStart: new Date(2018, 12, 23), end: new Date(2018, 12, 27), oldEnd: new Date(2018, 12, 27) }
+      { id: 1, content: 'item1', start: new Date(2018, 12, 23),  end: new Date(2018, 12, 27),  }
 
     ]);
 
