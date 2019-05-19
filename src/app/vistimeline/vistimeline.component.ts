@@ -17,15 +17,11 @@ export class VistimelineComponent implements OnInit {
   options: {};
   fatherItem: string[];
 
-
-
   constructor() {
-    this.getTimelineData();
-
   }
 
   ngOnInit() {
-
+    this.getTimelineData();
   }
 
   ngAfterViewInit() {
@@ -33,25 +29,30 @@ export class VistimelineComponent implements OnInit {
     this.timeline = new vis.Timeline(this.tlContainer, this.data, this.options);
     this.timeline.on('mouseDown', (properties) => {
       console.log('test');
-      // debugger;
-
     })
-
-    // this.timeline.on('mouseUp',(properties)=>{
-
-
-
   }
-  
-
-
+  updateGraph() {
+    this.getTimelineData();
+  }
   getTimelineData() {
-    // Create a DataSet (allows two way data-binding)
-
-    this.data = new vis.DataSet([
-      { id: 1, content: 'item1', start: new Date(2018, 12, 23),  end: new Date(2018, 12, 27),  }
-
-    ]);
+    if (this.root) {
+      const toBeVisited: Node[] = this.root.children;
+      const graphItems = [];
+      while (toBeVisited.length) {
+        const current = toBeVisited.pop();
+        toBeVisited.push(...current.children);
+        graphItems.push({ 
+          id: current.id, 
+          content: current.context, 
+          start: current.start, 
+          end: current.end});
+      }
+      this.data = new vis.DataSet(graphItems);
+    } else {
+      this.data = new vis.DataSet([
+        { id: 1, content: 'item1', start: new Date(2018, 12, 23),  end: new Date(2018, 12, 27)}
+      ]);
+    }
 
     this.options = {
       moveable: true,
@@ -61,20 +62,6 @@ export class VistimelineComponent implements OnInit {
       clickToUse: true,
       //multiselect:true,
       align:'center',
-
-
-
-
-    //   fieldSeparator: ',',
-    // quoteStrings: '"',
-    // decimalSeparator: '.',
-    // showLabels: true, 
-    // showTitle: true,
-    // title: 'My Awesome CSV',
-    // useTextFile: false,
-    // useBom: true,
-    // useKeysAsHeaders: true,
-
       onAdd: (newItem, callback) => {
         //debugger;
         newItem.timeline = this.timeline;
@@ -87,12 +74,6 @@ export class VistimelineComponent implements OnInit {
           if ((newItem.start >= currentTime.start && newItem.start <= currentTime.end)
             || (newItem.end >= currentTime.start && newItem.end <= currentTime.end)
             || (newItem.start <= currentTime.start && newItem.end >= currentTime.end)) {
-            console.log("Has Father");
-            console.log(newItem.start);
-            console.log(newItem.end);
-            console.log(currentTime.start);
-            console.log(currentTime.end);
-
             if (!newItem.fatherItem) {
               newItem.fatherItem = [];
             }
@@ -110,34 +91,13 @@ export class VistimelineComponent implements OnInit {
             if (newEnd < newItem.end) {
               newEnd = newItem.end;
             }
-            //debugger;
-            //this.timeline.itemSet.items[key].data.start = newStart;
-            //this.timeline.itemSet.items[key].data.end = newEnd;
             const itemData = {...this.timeline.itemSet.items[key],start:newStart,end:newEnd,oldStart:newStart,oldEnd:newEnd};
-            //debugger;
             this.timeline.itemsData.update(itemData);
-            //debugger;
           }
         })
-        console.log(newItem.fatherItem);
-        // const fathers= this.data.length==0 ? null : items.filter(existItem=>{
-        // newItem.start.getDate()>=existItem.getDate()
-        // })
-        // newItem = { ...newItem, father: fathers };
-        // this.data._data
-        // = { ...this.data._data,
-        // [this.data._data[1]]:{...this.data._data[1],end:newItem.end}
-        // };
-        // debugger;
-        //const itemData={...this.timeline.itemSet.items[1],end: newItem.end};
-        //this.timeline.itemsData.update(itemData);
-        //debugger;
         newItem.oldStart = newItem.start;
         newItem.oldEnd = newItem.end;
         callback(newItem);
-       // debugger;
-        //this.fatherItem = [];
-
       },
       onUpdate:  (item, callback)=> { //change name of item
         item.content = prompt('Edit items text:', item.content);
@@ -148,7 +108,7 @@ export class VistimelineComponent implements OnInit {
           callback(null);
         }
       },
-      onRemove:  (item, callback) =>{ //change name of item
+      onRemove:  (item, callback) =>{ 
         if (item.children.length>0){
           for (var i =0; i<item.children.length;i++) {
             item.timeline.itemsData.remove(item.children[i]);
@@ -158,23 +118,12 @@ export class VistimelineComponent implements OnInit {
         callback(item);
       },
       onMoving:  (item, callback) =>{ //change name of item
-        //console.log(item.end.getTime() - item.oldEnd.getTime());
-        //debugger;
         if (item.children){
           var did_change = (item.start.getTime() - item.oldStart.getTime()) != (item.end.getTime() - item.oldEnd.getTime());
           if (!did_change){
             for (var i=0; i<item.children.length; i++){
-              //debugger;
-              //console.log( (item.children[i].start.getTime() + item.start.getTime() - item.oldStart.getTime()) - item.children[i].start.getTime());
               var newStart = new Date(item.children[i].start.getTime() + item.start.getTime() - item.oldStart.getTime());
               var newEnd = new Date(item.children[i].end.getTime() + item.end.getTime() - item.oldEnd.getTime());
-              console.log(item.children[i].start);
-              console.log(item.children[i].end);
-              console.log(item.children[i].start.getTime() + item.start.getTime() - item.oldStart.getTime());
-              console.log(item.children[i].end.getTime() + item.end.getTime() - item.oldEnd.getTime());
-              console.log(newStart);
-              console.log(newEnd);
-              //debugger;
               item.children[i].start = newStart;
               item.children[i].end = newEnd;
               const itemData = {...item.timeline.itemSet.items[item.children[i].id],start:newStart,end:newEnd,oldStart:newStart,oldEnd:newEnd};
@@ -202,9 +151,6 @@ export class VistimelineComponent implements OnInit {
 
 }
 
-// const csvExporter = new ExportToCsv(this.options);
-
-// csvExporter.generateCsv(this.data);
 
 
 

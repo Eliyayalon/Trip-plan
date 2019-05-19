@@ -1,5 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Node } from '../models/models';
+import { NodeService } from '../node.service';
+import { debug } from 'util';
 
 @Component({
   selector: 'app-import-csv',
@@ -7,21 +9,42 @@ import { Node } from '../models/models';
   styleUrls: ['./import-csv.component.css']
 })
 export class ImportCsvComponent implements OnInit {
-  public importedData = ["id,name,start,end,parent",
-                          "1,,0,0,", 
-                          "2,n2,123,456,1",
-                          "3,n3,1234,4567,1",
-                          "4,n4,1231,4561,2"];
+  // public importedData = ["id,name,start,end,parent",
+  //                         "1,,0,0,", 
+  //                         "2,n2,1557643034236,1557743034236,1",
+  //                         "3,n3,1557773034236,1557843034236,1",
+  //                         "4,n4,1557683034236,1557723034236,2"];
+  public importedData : string;
+  public splitedToLines: string[];
   public splittedData: string[][];
-  @Input() root: Node;
-  constructor() { }
+  public root: Node;
+  @Output() onImportComplete: EventEmitter<Node> = new EventEmitter();
+  constructor(public nodeService: NodeService) { }
 
   ngOnInit() {
     
   }
 
-  importCsvButtonHandler() {
-    this.splittedData = this.importedData.map(n => n.split(','));
+fileUpload(event){
+  var reader = new FileReader();
+  //var me = this;
+  reader.onload = () => {
+    if(typeof reader.result == "string") {
+      this.importedData = reader.result;
+    }
+    debugger
+    this.csvSplittData();
+    this.onImportComplete.emit(this.root);
+  }
+  
+  reader.readAsText(event.srcElement.files[0]);
+}
+
+csvSplittData(){
+  this.splitedToLines = this.importedData.split('\r\n');
+  debugger
+    this.splittedData = this.splitedToLines.map(n => n.split(','));
+    debugger
     let isFirst = true;
     this.splittedData.forEach(nodeArray => {
       if (isFirst) {
@@ -29,42 +52,13 @@ export class ImportCsvComponent implements OnInit {
         return;
       }
       if (!nodeArray[4]) {
-        this.root = this.arrayToNode(nodeArray);
+        this.root = this.nodeService.arrayToNode(nodeArray);
       } else {
-        let nodeToBeAdded : Node = this.arrayToNode(nodeArray);
-        let parent = this.findNode(nodeArray[4], this.root);
-        nodeToBeAdded.parent = parent;
-        parent.children.push(nodeToBeAdded);
+        let nodeToBeAdded : Node = this.nodeService.arrayToNode(nodeArray);
+        this.nodeService.addNode(this.root, nodeToBeAdded, nodeArray[4]);
       }
     });
+    
   }
-
-  arrayToNode = (arr: string[]) =>
-    ({
-      id: arr[0],
-      start: new Date(arr[2]),
-      end: new Date(arr[3]),
-      context: arr[1],
-      children: [],
-      parent: null
-    })
   
-
-  findNode = (nodeId: string, root: Node): Node => {
-    if (root.id === nodeId) {
-      return root;
-    } else if (!root.children.length) {
-      return null;
-    } else {
-      let i = 0;
-      while (i < root.children.length) {
-        let res = this.findNode(nodeId, root.children[i]);
-        if (res) {
-          return res;
-        }
-      }
-      return null;
-    }
-  }
-
 }

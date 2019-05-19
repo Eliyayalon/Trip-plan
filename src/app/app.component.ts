@@ -9,8 +9,14 @@ import { Node } from './models/models';
 })
 export class AppComponent implements OnInit {
   public root: Node;
-  constructor() { }
+  constructor() { 
+    this.root = null;
+  }
 
+  onImportComplete(newRoot: Node) {
+    this.root = newRoot;
+    console.log(this.root);
+  }
   ngOnInit() {
   }
 
