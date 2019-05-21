@@ -102,15 +102,16 @@ export class VistimelineComponent implements OnInit {
           callback(null);
         }
       },
-      // onRemove:  (item, callback) =>{ 
-      //   if (item.children.length>0){
-      //     for (var i =0; i<item.children.length;i++) {
-      //       item.timeline.itemsData.remove(item.children[i]);
- 
-      //     }
-      //   }
-      //   callback(item);
-      //},
+      onRemove:  (item, callback) =>{ 
+        const node = this.nodeService.findNode(item.id, this.root);
+        for( var i = 0; i < node.parent.children.length; i++){ 
+          if ( node.parent.children[i].id === item.id) {
+            node.parent.children.splice(i, 1); 
+            i--;
+          }
+       }
+        callback(item);
+      },
       onMoving:  (item, callback) =>{ //change name of item
         if (item.children){
           var did_change = (item.start.getTime() - item.oldStart.getTime()) != (item.end.getTime() - item.oldEnd.getTime());

@@ -25,11 +25,13 @@ export class ExportCsvComponent {
   }
 
   public exportCsvButtonHandler() {
-    //debugger;
+    debugger;
+    this.exporedData = [];
     this.nodeToArray(this.root);
     const opt: IgxCsvExporterOptions = new IgxCsvExporterOptions("CSVExportFileFromData", CsvFileTypes.CSV);
     this.csvExportService.exportData(this.exporedData, opt);
   }
+  
 
 
 }
