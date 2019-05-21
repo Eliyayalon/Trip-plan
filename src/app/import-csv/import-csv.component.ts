@@ -48,7 +48,6 @@ export class ImportCsvComponent implements OnInit {
         isFirst = false;
         return;
       }
-      debugger;
       if (nodeArray.length > 1) {
         if (!nodeArray[4] || nodeArray[4] === "") {
           this.root = this.nodeService.arrayToNode(nodeArray);

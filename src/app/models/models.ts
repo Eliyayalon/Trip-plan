@@ -3,6 +3,6 @@ export interface Node {
     start: Date,
     end: Date,
     id: string,
-    context: string,
+    content: string,
     parent: Node
 }

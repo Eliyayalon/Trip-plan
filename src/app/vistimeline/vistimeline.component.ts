@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
 import { Node } from '../models/models';
+import { NodeService } from '../node.service';
 import { debug } from 'util';
 //import { ExportToCsv } from 'export-to-csv';
 declare var vis: any;
@@ -18,7 +19,7 @@ export class VistimelineComponent implements OnInit {
   options: {};
   fatherItem: string[];
 
-  constructor() {
+  constructor(public nodeService: NodeService) {
   }
 
   ngOnInit() {
@@ -47,7 +48,7 @@ export class VistimelineComponent implements OnInit {
         toBeVisited.push(...current.children);
         graphItems.push({ 
           id: current.id, 
-          content: current.context, 
+          content: current.content, 
           start: current.start, 
           end: current.end});
       }
@@ -68,44 +69,33 @@ export class VistimelineComponent implements OnInit {
       align:'center',
       onAdd: (newItem, callback) => {
         //debugger;
-        newItem.timeline = this.timeline;
-        newItem.fatherItem = [];
         newItem.children = [];
-        const items = this.data._data;
-        const fathers = this.data.length == 0 ? null : Object.keys(items).forEach(key => {
-          //const newTime = properties.time;
-          const currentTime = items[key];
+        const items = this.root.children;
+        const parent = items.filter(currentTime => (newItem.start >= currentTime.start && newItem.start <= currentTime.end)
+        || (newItem.end >= currentTime.start && newItem.end <= currentTime.end)
+        || (newItem.start <= currentTime.start && newItem.end >= currentTime.end));
+        if(parent.length > 0)  {
+          const currentTime = parent[0];
           if ((newItem.start >= currentTime.start && newItem.start <= currentTime.end)
             || (newItem.end >= currentTime.start && newItem.end <= currentTime.end)
             || (newItem.start <= currentTime.start && newItem.end >= currentTime.end)) {
-            if (!newItem.fatherItem) {
-              newItem.fatherItem = [];
-            }
-            newItem.fatherItem.push(items[key]);
             if (currentTime.children==null){
-              currentTime.children = []
+              currentTime.children = [];
             }
-            currentTime.children.push(newItem)
-            var newStart = currentTime.start;
-            var newEnd = currentTime.end;
-            //debugger;
-            if (newStart > newItem.start) {
-              newStart = newItem.start;
-            }
-            if (newEnd < newItem.end) {
-              newEnd = newItem.end;
-            }
-            const itemData = {...this.timeline.itemSet.items[key],start:newStart,end:newEnd,oldStart:newStart,oldEnd:newEnd};
-            this.timeline.itemsData.update(itemData);
+            newItem.parent = currentTime;
+            currentTime.children.push(newItem);
+            newItem.end = currentTime.end;
+            newItem.oldStart = newItem.start;
+            newItem.oldEnd = newItem.end;
           }
-        })
-        newItem.oldStart = newItem.start;
-        newItem.oldEnd = newItem.end;
+        }
         callback(newItem);
       },
       onUpdate:  (item, callback)=> { //change name of item
         item.content = prompt('Edit items text:', item.content);
         if (item.content != null) {
+          const node = this.nodeService.findNode(item.id, this.root);
+          node.content = item.content;
           callback(item);
         }
         else {
@@ -130,8 +120,6 @@ export class VistimelineComponent implements OnInit {
               var newEnd = new Date(item.children[i].end.getTime() + item.end.getTime() - item.oldEnd.getTime());
               item.children[i].start = newStart;
               item.children[i].end = newEnd;
-              const itemData = {...item.timeline.itemSet.items[item.children[i].id],start:newStart,end:newEnd,oldStart:newStart,oldEnd:newEnd};
-              item.timeline.itemsData.update(itemData);
             }
           }
 

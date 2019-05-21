@@ -18,13 +18,14 @@ export class ExportCsvComponent {
   }
 
   nodeToArray(node: Node) {
-    this.exporedData.push({ id: node.id, content: node.context, start: node.start.getTime(),end: node.end.getTime(), parent: node.parent && node.parent.id });
+    this.exporedData.push({ id: node.id, content: node.content, start: node.start.getTime(),end: node.end.getTime(), parent: node.parent && node.parent.id });
     node.children.forEach(node => {
       this.nodeToArray(node);
     });
   }
 
   public exportCsvButtonHandler() {
+    //debugger;
     this.nodeToArray(this.root);
     const opt: IgxCsvExporterOptions = new IgxCsvExporterOptions("CSVExportFileFromData", CsvFileTypes.CSV);
     this.csvExportService.exportData(this.exporedData, opt);

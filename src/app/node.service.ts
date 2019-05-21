@@ -14,7 +14,7 @@ export class NodeService {
     } else {
       let i = 0;
       while (i < root.children.length) {
-        let res = this.findNode(nodeId, root.children[i]);
+        let res = this.findNode(nodeId, root.children[i++]);
         if (res) {
           return res;
         }
@@ -28,7 +28,7 @@ export class NodeService {
       id: arr[0],
       start: new Date(arr[2] * 1),
       end: new Date(arr[3] - 0),
-      context: arr[1],
+      content: arr[1],
       children: [],
       parent: null
     })
