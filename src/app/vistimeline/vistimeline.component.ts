@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
 import { Node } from '../models/models';
+import { debug } from 'util';
 //import { ExportToCsv } from 'export-to-csv';
 declare var vis: any;
 
@@ -35,8 +36,11 @@ export class VistimelineComponent implements OnInit {
     this.getTimelineData();
   }
   getTimelineData() {
+    //debugger;
     if (this.root) {
-      const toBeVisited: Node[] = this.root.children;
+      
+      const toBeVisited: Node[] = [];
+      this.root.children.forEach(x => toBeVisited.push(x));
       const graphItems = [];
       while (toBeVisited.length) {
         const current = toBeVisited.pop();
@@ -56,7 +60,7 @@ export class VistimelineComponent implements OnInit {
 
     this.options = {
       moveable: true,
-      height: '250px',
+      height: '400px',
       editable: true,// add/remove item
       showTooltips: true,
       clickToUse: true,
@@ -108,15 +112,15 @@ export class VistimelineComponent implements OnInit {
           callback(null);
         }
       },
-      onRemove:  (item, callback) =>{ 
-        if (item.children.length>0){
-          for (var i =0; i<item.children.length;i++) {
-            item.timeline.itemsData.remove(item.children[i]);
+      // onRemove:  (item, callback) =>{ 
+      //   if (item.children.length>0){
+      //     for (var i =0; i<item.children.length;i++) {
+      //       item.timeline.itemsData.remove(item.children[i]);
  
-          }
-        }
-        callback(item);
-      },
+      //     }
+      //   }
+      //   callback(item);
+      //},
       onMoving:  (item, callback) =>{ //change name of item
         if (item.children){
           var did_change = (item.start.getTime() - item.oldStart.getTime()) != (item.end.getTime() - item.oldEnd.getTime());

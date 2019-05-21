@@ -1,5 +1,4 @@
 import { Component, Input } from "@angular/core";
-
 import { CsvFileTypes, IgxCsvExporterOptions, IgxCsvExporterService } from "igniteui-angular";
 import { Node } from '../models/models';
 
@@ -11,18 +10,24 @@ import { Node } from '../models/models';
 export class ExportCsvComponent {
   @Input() root: Node;
 
-  public localData = [
-    { id: 1, content: 'item1', start: new Date(2018, 12, 23),end: new Date(2018, 12, 27) }
-    
+  public exporedData = [    
   ]
   
   constructor(private csvExportService: IgxCsvExporterService) {
     
   }
 
+  nodeToArray(node: Node) {
+    this.exporedData.push({ id: node.id, content: node.context, start: node.start.getTime(),end: node.end.getTime(), parent: node.parent && node.parent.id });
+    node.children.forEach(node => {
+      this.nodeToArray(node);
+    });
+  }
+
   public exportCsvButtonHandler() {
+    this.nodeToArray(this.root);
     const opt: IgxCsvExporterOptions = new IgxCsvExporterOptions("CSVExportFileFromData", CsvFileTypes.CSV);
-    this.csvExportService.exportData(this.localData, opt);
+    this.csvExportService.exportData(this.exporedData, opt);
   }
 
 
