@@ -46,23 +46,24 @@ export class VistimelineComponent implements OnInit {
   getTimelineData() {
     // Create a DataSet (allows two way data-binding)
     this.data = new vis.DataSet([
-      { id: 1, content: 'item1', start: new Date(2018, 12, 23), oldStart: new Date(2018, 12, 23), end: new Date(2018, 12, 27), oldEnd: new Date(2018, 12, 27) }
+      { id: 1, content: 'item1', className: "enabled", start: new Date(2018, 12, 23), oldStart: new Date(2018, 12, 23), end: new Date(2018, 12, 27), oldEnd: new Date(2018, 12, 27) }
 
     ]);
 
     this.options = {
       moveable: true,
-      height: '250px',
+      height: '350px',
       editable: true,// add/remove item
       showTooltips: true,
       clickToUse: true,
      
-
+      
       onAdd: (newItem, callback) => {
-        //debugger;
+      
         newItem.timeline = this.timeline;
         newItem.fatherItem = [];
         newItem.children = [];
+        newItem.className = 'enabled';
         const items = this.data._data;
         const fathers = this.data.length == 0 ? null : Object.keys(items).forEach(key => {
           //const newTime = properties.time;
@@ -124,6 +125,21 @@ export class VistimelineComponent implements OnInit {
       },
       onUpdate:  (item, callback)=> { //change name of item
         item.content = prompt('Edit items text:', item.content);
+        var aaa = confirm("Is it enabled?");
+        if (aaa){
+          item.className = "enabled";
+        }
+        else{
+          item.className = "disabled";
+        }
+        if (item.children){
+          for (var i=0; i<item.children.length; i++){
+            item.children[i].className = item.className;
+            const itemData = {...item.timeline.itemSet.items[item.children[i].id],className:item.className};
+            item.timeline.itemsData.update(itemData);
+
+          }
+        }
         if (item.content != null) {
           callback(item);
         }
