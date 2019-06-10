@@ -10,8 +10,8 @@ import { Node } from './models/models';
 export class AppComponent implements OnInit {
   public root: Node;
   constructor() { 
-    this.root = null;
-    //this.root = { children: [{ id: 1, content: 'item1', start: new Date(2018, 12, 23),  end: new Date(2018, 12, 27) }] };
+    //this.root = null;
+    this.root = { id: "0", content: "root", parent: null, start: new Date(2018, 12, 23),  end: new Date(2018, 12, 27), children: [{ id: "1", content: 'item1', start: new Date(2018, 12, 23),  end: new Date(2018, 12, 27), children: [], parent: null }] };
     
   }
 

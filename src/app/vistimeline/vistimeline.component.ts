@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ElementRef, ViewChild, Input } from '@angular/core';
+import { AfterViewInit, Component, OnInit, SimpleChanges, OnChanges, ElementRef, ViewChild, Input } from '@angular/core';
 import { Node } from '../models/models';
 import { NodeService } from '../node.service';
 import { debug } from 'util';
@@ -10,7 +10,7 @@ declare var vis: any;
   templateUrl: './vistimeline.component.html',
   styleUrls: ['./vistimeline.component.css']
 })
-export class VistimelineComponent implements OnInit {
+export class VistimelineComponent implements OnInit, OnChanges {
   @Input() root: Node;
   @ViewChild("visjsTimeline") timelineContainer: ElementRef;
   tlContainer: any;
@@ -26,18 +26,17 @@ export class VistimelineComponent implements OnInit {
     this.getTimelineData();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    this.getTimelineData();
+  }
+
   ngAfterViewInit() {
-    this.tlContainer = this.timelineContainer.nativeElement;
-    this.timeline = new vis.Timeline(this.tlContainer, this.data, this.options);
-    this.timeline.on('mouseDown', (properties) => {
-      console.log('test');
-    })
+    
   }
   updateGraph() {
     this.getTimelineData();
   }
   getTimelineData() {
-    //debugger;
     if (this.root) {
       
       const toBeVisited: Node[] = [];
@@ -140,6 +139,15 @@ export class VistimelineComponent implements OnInit {
       }
     };
 
+    if(this.timeline) {
+      this.timeline.destroy();
+    }
+
+    this.tlContainer = this.timelineContainer.nativeElement;
+    this.timeline = new vis.Timeline(this.tlContainer, this.data, this.options);
+    this.timeline.on('mouseDown', (properties) => {
+      console.log('test');
+    })
   }
 
 }

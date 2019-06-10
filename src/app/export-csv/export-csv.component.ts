@@ -25,7 +25,6 @@ export class ExportCsvComponent {
   }
 
   public exportCsvButtonHandler() {
-    debugger;
     this.exporedData = [];
     this.nodeToArray(this.root);
     const opt: IgxCsvExporterOptions = new IgxCsvExporterOptions("CSVExportFileFromData", CsvFileTypes.CSV);

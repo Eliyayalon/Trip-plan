@@ -39,7 +39,29 @@ export class NodeService {
     parentNode.children.push(node)  
   }
 
-public removeNode(nodeId: string, root: Node){
+  // public findParent(start:Date,end:Date,root:Node)
+  // {
+  //       const currNode=root;
+  //     if (!root.children.length)
+  //         return null;
+    
+  //     else
+  //     {
+  //       let i = 0;
+  //        while (i < root.children.length) {
+  //          if(start>=root.children[i].start&&end<=root.children[i].end)
+  //             {
+  //               return root.children[i];
+  //             }
+    
+  //     }
+  //     return null;
+  //   }
+  //     }
+  
+
+public removeNode(nodeId: string, root: Node)
+{
   const node = this.findNode(nodeId, root);  
   const index = node.parent.children.indexOf(node);
   if (index !== -1) {
