@@ -9,11 +9,7 @@ import { debug } from 'util';
   styleUrls: ['./import-csv.component.css']
 })
 export class ImportCsvComponent implements OnInit {
-  // public importedData = ["id,name,start,end,parent",
-  //                         "1,,0,0,", 
-  //                         "2,n2,1557643034236,1557743034236,1",
-  //                         "3,n3,1557773034236,1557843034236,1",
-  //                         "4,n4,1557683034236,1557723034236,2"];
+  
   public importedData: string;
   public splitedToLines: string[];
   public splittedData: string[][];
@@ -24,6 +20,7 @@ export class ImportCsvComponent implements OnInit {
   ngOnInit() {
 
   }
+  
   fileUpload(event) {
     var reader = new FileReader();
     reader.readAsText(event.srcElement.files[0]);
@@ -39,24 +36,32 @@ export class ImportCsvComponent implements OnInit {
 
   }
 
-  csvSplittData() {
-    this.splitedToLines = this.importedData.split('\r\n');
-    this.splittedData = this.splitedToLines.map(n => n.split(','));
-    let isFirst = true;
-    this.splittedData.forEach(nodeArray => {
-      if (isFirst) {
-        isFirst = false;
-        return;
-      }
-      if (nodeArray.length > 1) {
-        if (!nodeArray[4] || nodeArray[4] === "") {
-          this.root = this.nodeService.arrayToNode(nodeArray);
-        } else {
-          let nodeToBeAdded: Node = this.nodeService.arrayToNode(nodeArray);
-          this.nodeService.addNode(this.root, nodeToBeAdded, nodeArray[4]);
-        }
-      }
-    });
-  }
+
+ csvSplittData(){
+
+  const rowToObject = (headers, cells) =>
+  headers.reduce(
+    (acc, header, i) => {
+      acc[header] = cells[i]
+      return acc
+    },
+    {}
+  )
+
+const csvToObjects = file => {
+  const [headerRow, ...dataRows] = file.split('\n')
+  const headers = headerRow.split(',')
+  return dataRows.map(
+    row => rowToObject(headers, row.split(','))
+  )
+}
+ }
+
+
+
+
+
+
+
 
 }

@@ -1,0 +1,30 @@
+
+.red
+{
+    background-color: red;
+
+}
+.vis-item.vis-range.red.vis-editable
+{
+    background-color: white;
+
+}
+
+.vis-item.vis-item.vis-range.red.vis-editable{
+    border-color: orange;
+    background-color: yellow;
+  }
+  .vis-time-axis .grid.vis-odd {
+    background: #c7c2c2;
+  }
+  .vis-item {
+    border-color: orange;
+    background-color: yellow;
+  }
+#timeline .v .vis-item-content
+{
+    color:red;
+    background-color: red;
+
+
+}
