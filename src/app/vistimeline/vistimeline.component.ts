@@ -6,6 +6,9 @@ import { getDate } from 'ngx-bootstrap/chronos/utils/date-getters';
 import { typeSourceSpan } from '@angular/compiler';
 import { ExportToCsv } from 'export-to-csv';
 declare var vis: any;
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
 
 @Component({
   selector: 'app-vistimeline',
@@ -14,8 +17,22 @@ declare var vis: any;
 })
 export class VistimelineComponent implements OnInit {
   @Input() root: Node;
+  public onChange( { editor }: ChangeEvent ) {
+    const rich = editor.getData();
+    this.selectedNode.description=rich;
 
-
+    
+    console.log(rich);
+}
+public model = {
+  editorData: ''
+};
+public isDisabled = false;
+    // ...
+    toggleDisabled() {
+        this.isDisabled = !this.isDisabled
+    }
+  public Editor = ClassicEditor;
   @ViewChild("visjsTimeline") timelineContainer: ElementRef;
   tlContainer: any;
   timeline: any;
@@ -26,6 +43,21 @@ export class VistimelineComponent implements OnInit {
   fatherItem: string[];
   selectedNode:Node=null;
 
+
+/*
+  util = require('util');
+  express  = require('express');
+  
+  config = require('./config');
+  gcal = require('../GoogleCalendar');
+  app = this.express();
+  passport = require('passport')
+  GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+ */
+  
+
+
+
   constructor(public nodeService: NodeService) {
     //this.getTimelineData();
 
@@ -33,23 +65,42 @@ export class VistimelineComponent implements OnInit {
 
   ngOnInit() {
     //this.getTimelineData();
+    console.log(this.Editor);
+    console.log(ClassicEditor);
+
 
    }
 
   ngAfterViewInit() {
     
-    
+    /*
+    debugger;
+    this.tlContainer = this.timelineContainer.nativeElement;
+    this.timeline = new vis.Timeline(this.tlContainer, this.data, this.options);
+    //this.timeline.itemsData.remove(1);
+    this.timeline.on('select', (properties) => {
+        var id = properties.items[0];
+        console.log(id);
+        this.selectedNode=this.nodeService.findNode(id,this.root);
+        console.log(this.selectedNode.id);
+
+    })
+    */
   }
   updateGraph() {
     
+    debugger;
     this.getTimelineData();
     this.tlContainer = this.timelineContainer.nativeElement;
     this.timeline = new vis.Timeline(this.tlContainer, this.data, this.options);
     this.timeline.itemsData.remove(1);
     this.timeline.on('select', (properties) => {
+      
         var id = properties.items[0];
         console.log(id);
         this.selectedNode=this.nodeService.findNode(id,this.root);
+
+        this.model.editorData=this.selectedNode.description;
         console.log(this.selectedNode.id);
 
     })
@@ -73,7 +124,7 @@ export class VistimelineComponent implements OnInit {
     //this.ngAfterViewInit();
     */
   }
-find
+//find
   updateParentsTimeline(parent: Node){
     if (parent!= null && !parent.isRoot){
       const itemData = {...this.timeline.itemSet.items[parent.id],start:parent.start,end:parent.end}; //,oldStart:newStart,oldEnd:newEnd};
@@ -81,6 +132,8 @@ find
       this.updateParentsTimeline(parent.parent);
     }
   }
+
+
 
   updateChildrenTimeline(node: Node){
     if (node!=null && !node.isRoot){
@@ -91,7 +144,6 @@ find
       }
     }
   }
-
   disableEnableTree(node:Node,enabled:boolean)
   {
     if (node!=null && !node.isRoot){
@@ -190,11 +242,13 @@ find
             className:current.isEnabled?"enabled":"disabled"});
           }
       }
+      debugger;
       this.data = new vis.DataSet(graphItems);
       
 
     } else {
-      this.root = new Node(null,null,'root',null,true,true,0);
+      debugger;
+      this.root = new Node(null,null,'root',null,true,true,0,"");
       this.root.id='root';
       this.root.start=null;
       this.root.end=null;
@@ -221,36 +275,111 @@ find
       clickToUse: true,
       //multiselect:true,
       align:'center',
-    
+
+      
+      template: (item, element, data) => {
+
+        if (item != null){
+          //var val = '<h1>' + item.content + '</h1>';
+          //debugger;
+          const node = this.nodeService.findNode(item.id, this.root);
+          if  (node != null){
+            return  node.content ;
+          }
+        }
+        
+      },
+      
 
       onAdd: (newItem, callback) => {
-        
-       // debugger;
-        newItem.className = "enabled";
-        let currNode=new Node(newItem.start,newItem.end,newItem.id,newItem.content,false,true,0);
+        //this.timeline.setSelection('1', {focus:true});
+        //debugger; 
+        debugger;
+      newItem.className = "enabled";
+       let currNode=new Node(newItem.start,newItem.end,newItem.id,newItem.content,false,true,0,"");
+       //console.log("dfsd:" +typeof(0));
         currNode.children=[];
+       
         currNode.parent=this.nodeService.getParent(currNode, this.root);
+
+
+
+
+        //currNode.parent = nodeParent;
+
         currNode.parent.children.push(currNode);
 
         this.nodeService.updateParent(currNode.parent, currNode.start, currNode.end);
         console.log("the enabled of this node is: " +currNode.isEnabled);
+       
+
         newItem.children = [];
         newItem.start=currNode.start;
         newItem.content=currNode.content;
         newItem.parent=currNode.parent;
-       // console.log(this.formatAMPM(currNode.start));
 
         newItem.end=currNode.end;
-        console.log("the  year  is: " +currNode.start.getFullYear());
-        currNode.start.getHours()
-        //console.log("the  start 2232date is: " +currNode.start.getDate()+"/"+currNode.start.getMonth()+"/"+currNode.start.getFullYear());
-        //console.log("the time is: " +currNode.start.getHours() + ":" + currNode.start.getMinutes()+ " "+currNode.start.getHours()>=12 ? 'pm' :'am');
 
-        //console.log("the date is: "+ currNode.start.toLocaleTimeString());
-
-        console.log("the hour is: "+ currNode.start.getTime());
         this.updateParentsTimeline(newItem.parent);
 
+
+        //const items = this.root.children;
+        /*const items = this.data._data;
+        //const fathers = this.data.length == 0 ? null : Object.keys(items).forEach(key => {
+          //const newTime = properties.time;
+          const currentTime = items[key];
+          if ((newItem.start >= currentTime.start && newItem.start <= currentTime.end)
+            || (newItem.end >= currentTime.start && newItem.end <= currentTime.end)
+            || (newItem.start <= currentTime.start && newItem.end >= currentTime.end)) {
+            console.log("Has Father");
+            console.log(newItem.start);
+            console.log(newItem.end);
+            console.log(currentTime.start);
+            console.log(currentTime.end);
+            debugger;
+            if (!newItem.fatherItem) {
+              newItem.fatherItem = [];
+            }
+            newItem.fatherItem.push(items[key]);
+            if (currentTime.children==null){
+              currentTime.children = []
+            }
+            currentTime.children.push(newItem)
+            var newStart = currentTime.start;
+            var newEnd = currentTime.end;
+            //debugger;
+            if (newStart > newItem.start) {
+              newStart = newItem.start;
+            }
+            if (newEnd < newItem.end) {
+              newEnd = newItem.end;
+            }
+            debugger;
+            //this.timeline.itemSet.items[key].data.start = newStart;
+            //this.timeline.itemSet.items[key].data.end = newEnd;
+            const itemData = {...this.timeline.itemSet.items[key],start:newStart,end:newEnd,oldStart:newStart,oldEnd:newEnd};
+            //debugger;
+            this.timeline.itemsData.update(itemData);
+            //debugger;
+          }
+        })
+        
+        */
+       // console.log(newItem.fatherItem);
+        // const fathers= this.data.length==0 ? null : items.filter(existItem=>{
+        // newItem.start.getDate()>=existItem.getDate()
+        // })
+        // newItem = { ...newItem, father: fathers };
+        // this.data._data
+        // = { ...this.data._data,
+        // [this.data._data[1]]:{...this.data._data[1],end:newItem.end}
+        // };
+        // debugger;
+        //const itemData={...this.timeline.itemSet.items[1],end: newItem.end};
+        //this.timeline.itemsData.update(itemData);
+        //debugger;
+       // newItem.oldStart = newItem.start;
+       // newItem.oldEnd = newItem.end;
         callback(newItem);
 
 
@@ -259,6 +388,27 @@ find
 
 
 
+        /*const parent = items.filter(currentTime => (newItem.start >= currentTime.start && newItem.start <= currentTime.end)
+        || (newItem.end >= currentTime.start && newItem.end <= currentTime.end)
+        || (newItem.start <= currentTime.start && newItem.end >= currentTime.end));
+        if(parent.length > 0)  {
+          const currentTime = parent[0];
+          if ((newItem.start >= currentTime.start && newItem.start <= currentTime.end)
+            || (newItem.end >= currentTime.start && newItem.end <= currentTime.end)
+            || (newItem.start <= currentTime.start && newItem.end >= currentTime.end)) {
+            if (currentTime.children==null){
+              currentTime.children = [];
+            }
+            newItem.parent = currentTime;
+            currentTime.children.push(newItem);
+            newItem.end = currentTime.end;
+            newItem.oldStart = newItem.start;
+            newItem.oldEnd = newItem.end;
+          }
+        }
+        
+        callback(newItem);
+        */
       },
       onUpdate:  (item, callback)=> { //change name of item
         item.content = prompt('Edit items text:', item.content);
@@ -273,7 +423,7 @@ find
         }
       },
       onRemove:  (item, callback) =>{ 
-        
+        debugger;
         const node = this.nodeService.findNode(item.id, this.root);
 
 
@@ -290,7 +440,9 @@ find
 
 
       },
-      onMoving:  (item, callback) =>{ 
+      onMoving:  (item, callback) =>{ //change name of item
+        //debugger;
+        //console.log("moving");
         const node = this.nodeService.findNode(item.id, this.root);
 
         if (node != null){
@@ -305,7 +457,22 @@ find
           this.updateChildrenTimeline(node);
 
         }
-       
+        /*
+        if (item.children){
+          var did_change = (item.start.getTime() - item.oldStart.getTime()) != (item.end.getTime() - item.oldEnd.getTime());
+          if (!did_change){
+            for (var i=0; i<item.children.length; i++){
+              var newStart = new Date(item.children[i].start.getTime() + item.start.getTime() - item.oldStart.getTime());
+              var newEnd = new Date(item.children[i].end.getTime() + item.end.getTime() - item.oldEnd.getTime());
+              item.children[i].start = newStart;
+              item.children[i].end = newEnd;
+            }
+          }
+
+        } 
+        item.oldStart=item.start;
+        item.oldEnd=item.end;
+        */
         callback(item);
       },
       tooltip: {

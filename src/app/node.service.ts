@@ -111,7 +111,8 @@ export class NodeService {
       parent: null,
       isRoot: arr[5]=="true"?true:false,
       isEnabled:arr[7]=="true"?true:false,
-      price:arr[6]
+      price:arr[6],
+      description:arr[8]
     })
 
   public addNode (root: Node, node: Node, parentId:string) {

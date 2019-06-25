@@ -1,13 +1,24 @@
 <div id="timeline" #visjsTimeline></div>
+
 <input type="button" (click)="updateGraph()" value="create timeline">
 
 <div *ngIf="root">
-<label>Enter place</label>
+<label>find place</label>
 <input (keyup)="onKey($event)">
 <button class="btn btn-primary" (click)="findContent()">find</button>
 <button class="btn btn-primary" (click)="disableEnableActivity(false)">disable</button>
 <button class="btn btn-primary" (click)="disableEnableActivity(true)">enable</button>
 <button class="btn btn-primary" (click)="setPrice()">set price</button>
+
+
+
+<ckeditor [(ngModel)]="model.editorData" [disabled]="isDisabled" [editor]="Editor" (change)="onChange($event)"></ckeditor>
+<button (click)="toggleDisabled()">
+    {{ isDisabled ? 'Enable editor' : 'Disable editor' }}
+</button>
+
+
+
 <div *ngIf="selectedNode">
     <p>Price: {{selectedNode.price}}</p>
     <p>Start Date: {{selectedNode.start}}</p>
@@ -18,6 +29,6 @@
             <p>total price {{root.price}} </p>
     </div>
     <app-export-csv [root]="root"></app-export-csv>
-
+    
 
 </div>

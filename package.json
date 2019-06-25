@@ -19,6 +19,8 @@
     "@angular/platform-browser": "~7.1.0",
     "@angular/platform-browser-dynamic": "~7.1.0",
     "@angular/router": "~7.1.0",
+    "@ckeditor/ckeditor5-angular": "^1.1.0",
+    "@ckeditor/ckeditor5-build-classic": "^12.2.0",
     "@types/jquery": "^3.3.29",
     "core-js": "^2.5.4",
     "export-to-csv": "^0.2.1",

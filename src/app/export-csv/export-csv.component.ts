@@ -33,24 +33,25 @@ export class ExportCsvComponent {
     }
     else{
       debugger;
-      this.exporedData.push({ 
+      this.exporedData.push({  id: node.id,content:node.content,
         start: JSON.stringify(node.start),
        end: JSON.stringify(node.end),
-       id: node.id,
+      
         parent: node.parent!=null ? node.parent.id:'',
         isRoot: node.isRoot, 
        price: node.price, 
        enabled: node.isEnabled ,
+       description:node.description,
        "Subject": node.content,
        "Start Date":node.start.getDate()+"/"+node.start.getMonth()+"/"+node.start.getFullYear(),
        "Start Time":this.formatAMPM(node.start),
       
        "End Date":node.end.getDate()+"/"+node.end.getMonth()+"/"+node.end.getFullYear(), 
-       "End Time":this.formatAMPM(node.end),
+      "End Time":this.formatAMPM(node.end),
        "Private":"",
        "All Day Event":"",
        "Location":""}
-
+      
        );
 
  //this.exporedData.push({ id: node.id, content: node.content, start: JSON.stringify(node.start),end: JSON.stringify(node.end), parent: node.parent!=null ? node.parent.id:'', isRoot: node.isRoot, price: node.price, enabled: node.isEnabled });

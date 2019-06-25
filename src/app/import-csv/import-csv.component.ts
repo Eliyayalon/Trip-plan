@@ -20,7 +20,6 @@ export class ImportCsvComponent implements OnInit {
   ngOnInit() {
 
   }
-  
   fileUpload(event) {
     var reader = new FileReader();
     reader.readAsText(event.srcElement.files[0]);
@@ -36,32 +35,28 @@ export class ImportCsvComponent implements OnInit {
 
   }
 
-
- csvSplittData(){
-
-  const rowToObject = (headers, cells) =>
-  headers.reduce(
-    (acc, header, i) => {
-      acc[header] = cells[i]
-      return acc
-    },
-    {}
-  )
-
-const csvToObjects = file => {
-  const [headerRow, ...dataRows] = file.split('\n')
-  const headers = headerRow.split(',')
-  return dataRows.map(
-    row => rowToObject(headers, row.split(','))
-  )
-}
- }
-
-
-
-
-
-
-
+  csvSplittData() {
+    this.splitedToLines = this.importedData.split('\r\n');
+    console.log(this.splitedToLines);
+    this.splittedData = this.splitedToLines.map(n => n.split(','));
+    console.log(this.splitedToLines);
+    let isFirst = true;
+    this.splittedData.forEach(nodeArray => {
+      if (isFirst) {
+        isFirst = false;
+        return;
+      }
+      if (nodeArray.length > 1) {
+        if (!nodeArray[4] || nodeArray[4] === "") {
+          debugger;
+          this.root = this.nodeService.arrayToNode(nodeArray);
+        } else {
+          debugger;
+          let nodeToBeAdded: Node = this.nodeService.arrayToNode(nodeArray);
+          this.nodeService.addNode(this.root, nodeToBeAdded, nodeArray[4]);
+        }
+      }
+    });
+  }
 
 }
