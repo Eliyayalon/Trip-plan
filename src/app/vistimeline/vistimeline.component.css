@@ -9,6 +9,11 @@
     background-color: white;
 
 }
+.btn.btn-primary
+{
+  color:white;
+  background-color: #343A40;
+}
 
 .vis-item.vis-item.vis-range.red.vis-editable{
     border-color: orange;

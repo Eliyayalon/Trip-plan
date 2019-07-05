@@ -1,7 +1,11 @@
-<h1>trip plan</h1>  
+
+
+      <app-vistimeline  [root]="root" ></app-vistimeline><br>
+ 
+
+
+
+
+
 <!-- <button onclick="download_csv()">Download CSV</button>  -->
-<app-vistimeline [root]="root" ></app-vistimeline>
-<div *ngIf="!root">
-<app-import-csv (onImportComplete)="onImportComplete($event)"></app-import-csv>
-</div>
 

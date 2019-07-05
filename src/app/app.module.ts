@@ -11,6 +11,7 @@ import {Location} from './location';
 import { ExportCsvComponent } from './export-csv/export-csv.component'
 import { IgxCsvExporterService } from 'igniteui-angular';
 import { ImportCsvComponent } from './import-csv/import-csv.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { ImportCsvComponent } from './import-csv/import-csv.component';
     FormsModule,
     PopoverModule.forRoot(),		  
     ReactiveFormsModule,
-    BrowserModule
+    BrowserModule,CKEditorModule
   ],
   providers: [IgxCsvExporterService],
   entryComponents: [],

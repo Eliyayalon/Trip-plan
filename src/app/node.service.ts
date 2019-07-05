@@ -5,7 +5,7 @@ import {Node} from './models/models';
   providedIn: 'root'
 })
 export class NodeService {
-
+  public allowToCreate:boolean=true;
   public findNode = (nodeId: string, root?: Node): Node => {
     if (root.id === nodeId) {
       return root;
@@ -111,7 +111,8 @@ export class NodeService {
       parent: null,
       isRoot: arr[5]=="true"?true:false,
       isEnabled:arr[7]=="true"?true:false,
-      price:arr[6]
+      price:arr[6],
+      description:arr[8]
     })
 
   public addNode (root: Node, node: Node, parentId:string) {

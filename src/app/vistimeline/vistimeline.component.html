@@ -1,23 +1,76 @@
-<div id="timeline" #visjsTimeline></div>
-<input type="button" (click)="updateGraph()" value="create timeline">
+<nav class="navbar navbar-dark bg-dark mb-5">
+
+        <a class="navbar-brand" href="/">Trip Plan</a>
+        <div class="navbar-expand mr-auto">
+          <div class="navbar-nav">
+            <a class="nav-item nav-link" href="#">About</a>
+            <a class="nav-item nav-link" href="#">Contact</a>
+          </div>
+        </div>
+        <div class="navbar-expand ml-auto navbar-nav">
+        <!-- Dropdown -->
+   <!-- Example single danger button -->
+  
+      
+        
+
+
+          <div class="navbar-nav">
+                <button type="button" class="btn btn-default navbar-btn" (click)="updateGraph()" *ngIf="allow" >create timeline</button>
+
+                <app-import-csv (onImportComplete)="onImportComplete($event)"></app-import-csv>
+
+            <a class="nav-item nav-link"  target="_blank">
+                    <app-export-csv *ngIf="root" [root]="root"></app-export-csv>
+                </a>
+            <a class="nav-item nav-link"  target="_blank">
+              <i class="fa fa-twitter"></i>
+            </a>
+            <a class="nav-item nav-link"  target="_blank">
+              <i class="fa fa-medium"></i>
+            </a>
+          </div>
+        </div>
+        <form *ngIf="root" class="form-inline my-2 my-lg-0">
+                <input (keyup)="onKey($event)" class="form-control mr-sm-2" type="search" placeholder="Enter a place" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" (click)="findContent()">Search </button>
+        </form>
+      </nav>
+      <div id="timeline" #visjsTimeline></div>
+
 
 <div *ngIf="root">
-<label>Enter place</label>
-<input (keyup)="onKey($event)">
-<button class="btn btn-primary" (click)="findContent()">find</button>
-<button class="btn btn-primary" (click)="disableEnableActivity(false)">disable</button>
-<button class="btn btn-primary" (click)="disableEnableActivity(true)">enable</button>
-<button class="btn btn-primary" (click)="setPrice()">set price</button>
+<button [disabled]="!selectedNode" class="btn btn-primary" (click)="setPrice()">set price</button>
+<button [disabled]="!selectedNode" class="btn btn-danger" (click)="disableEnableActivity(false)">disable</button>
+<button [disabled]="!selectedNode" class="btn btn-success" (click)="disableEnableActivity(true)">enable</button>
+<button  [disabled]="!selectedNode" class="btn btn-primary" (click)="enableDescription()">enable Description</button>
+
+<br>
+<div *ngIf="descriptionIsAllow">
+    <label>Enter A Description</label>
+
+<ckeditor tagName="textarea" [(ngModel)]="model.editorData" [disabled]="isDisabled" [editor]="Editor" (change)="onChange($event)"></ckeditor>
+<button (click)="toggleDisabled()">
+    {{ isDisabled ? 'Enable editor' : 'Disable editor' }}
+</button>
+</div>
+
 <div *ngIf="selectedNode">
-    <p>Price: {{selectedNode.price}}</p>
-    <p>Start Date: {{selectedNode.start}}</p>
-    <p>End Date: {{selectedNode.end}}</p>
+    <li>Price: {{selectedNode.price}}</li>
+    <li>Start Date: {{selectedNode.start}}</li>
+    <li>End Date: {{selectedNode.end}}</li>
 
     </div>
     <div *ngIf="root">
-            <p>total price {{root.price}} </p>
+            <li>Total price of Trip: {{root.price}} </li>
     </div>
-    <app-export-csv [root]="root"></app-export-csv>
+    
 
 
-</div>
+  </div>
+  <nav class="navbar navbar-dark bg-dark mt-5 fixed-bottom" *ngIf="!root">
+    <div class="navbar-expand m-auto navbar-text">
+     Organize <i class="fa fa-heart"></i> Your Trip 
+    </div>
+  </nav>
+  
