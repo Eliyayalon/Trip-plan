@@ -27,7 +27,8 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     FormsModule,
     PopoverModule.forRoot(),		  
     ReactiveFormsModule,
-    BrowserModule,CKEditorModule
+    BrowserModule,CKEditorModule,    
+
   ],
   providers: [IgxCsvExporterService],
   entryComponents: [],

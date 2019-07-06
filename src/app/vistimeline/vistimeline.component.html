@@ -1,34 +1,24 @@
-<nav class="navbar navbar-dark bg-dark mb-5">
+<nav class="navbar navbar-dark bg-dark mb-3">
 
         <a class="navbar-brand" href="/">Trip Plan</a>
         <div class="navbar-expand mr-auto">
           <div class="navbar-nav">
-            <a class="nav-item nav-link" href="#">About</a>
-            <a class="nav-item nav-link" href="#">Contact</a>
+            <a class="nav-item nav-link" href="/">Home</a>
+            <a class="nav-item nav-link" target="_blank" href="https://www.google.com/maps">Map</a>
+            <a class="nav-item nav-link" target="_blank" href="https://www.skyscanner.co.il">Flights</a>
+            
           </div>
         </div>
         <div class="navbar-expand ml-auto navbar-nav">
         <!-- Dropdown -->
    <!-- Example single danger button -->
-  
-      
-        
 
-
-          <div class="navbar-nav">
-                <button type="button" class="btn btn-default navbar-btn" (click)="updateGraph()" *ngIf="allow" >create timeline</button>
-
-                <app-import-csv (onImportComplete)="onImportComplete($event)"></app-import-csv>
-
+         <div class="navbar-nav">
             <a class="nav-item nav-link"  target="_blank">
                     <app-export-csv *ngIf="root" [root]="root"></app-export-csv>
                 </a>
-            <a class="nav-item nav-link"  target="_blank">
-              <i class="fa fa-twitter"></i>
-            </a>
-            <a class="nav-item nav-link"  target="_blank">
-              <i class="fa fa-medium"></i>
-            </a>
+            
+          
           </div>
         </div>
         <form *ngIf="root" class="form-inline my-2 my-lg-0">
@@ -36,15 +26,30 @@
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit" (click)="findContent()">Search </button>
         </form>
       </nav>
-      <div id="timeline" #visjsTimeline></div>
+
+
+
+
+
+      <div id="timeline" #visjsTimeline>
+        
+      </div>
 
 
 <div *ngIf="root">
-<button [disabled]="!selectedNode" class="btn btn-primary" (click)="setPrice()">set price</button>
-<button [disabled]="!selectedNode" class="btn btn-danger" (click)="disableEnableActivity(false)">disable</button>
-<button [disabled]="!selectedNode" class="btn btn-success" (click)="disableEnableActivity(true)">enable</button>
-<button  [disabled]="!selectedNode" class="btn btn-primary" (click)="enableDescription()">enable Description</button>
+  <nav *ngIf="root" class="navbar navbar-light bg-light">
+    <form class="form-inline">
+        <button  [disabled]="!selectedNode" class="btn btn-primary navbar-btn" (click)="changeName()">change Name</button>
 
+      <button [disabled]="!selectedNode" class="btn btn-primary navbar-btn" (click)="setPrice()">Set Price</button>
+<button  [disabled]="!selectedNode" class="btn btn-primary navbar-btn" (click)="enableDescription()">Insert Description</button>
+<button  [disabled]="!selectedNode" class="btn btn-primary navbar-btn" (click)="showItemDetails()">Show/Hide Details</button>
+<button [disabled]="!selectedNode" class="btn btn-danger navbar-btn" (click)="disableEnableActivity(false)">Disable</button>
+<button [disabled]="!selectedNode" class="btn btn-success navbar-btn" (click)="disableEnableActivity(true)">Enable</button>
+
+    </form>
+  </nav>
+  
 <br>
 <div *ngIf="descriptionIsAllow">
     <label>Enter A Description</label>
@@ -55,22 +60,52 @@
 </button>
 </div>
 
-<div *ngIf="selectedNode">
+<div *ngIf="showItemDet">
     <li>Price: {{selectedNode.price}}</li>
-    <li>Start Date: {{selectedNode.start}}</li>
-    <li>End Date: {{selectedNode.end}}</li>
+    <li>Start Date: {{convertedDateStart}}</li>
+    <li>End Date: {{convertedDateEnd}}</li>
 
     </div>
     <div *ngIf="root">
             <li>Total price of Trip: {{root.price}} </li>
     </div>
-    
-
-
   </div>
-  <nav class="navbar navbar-dark bg-dark mt-5 fixed-bottom" *ngIf="!root">
-    <div class="navbar-expand m-auto navbar-text">
-     Organize <i class="fa fa-heart"></i> Your Trip 
+
+    <!-- Full Page Intro -->
+    <!-- <div *ngIf="!root" class="view" style="background-image: url('https://www.intrepidtravel.com/adventures/wp-content/uploads/2017/11/stefan-machler-440749-1170x658.jpg'); background-repeat: no-repeat; background-size: cover; background-position: center center;">-->
+
+   <div *ngIf="!root" class="view" style="background-image: url('https://travel.home.sndimg.com/content/dam/images/travel/stock/2018/10/30/iStock_846088202_ChrisBoswell_Badlands_USRoadTripRoutes.jpg.rend.hgtvcom.966.644.suffix/1540915995809.jpeg'); background-repeat: no-repeat; background-size: cover; background-position: center center;"> 
+    <!-- Mask & flexbox options-->
+      <!-- Content -->
+      <div class="container">
+        <!--Grid row-->
+        <div class="row">
+          <!--Grid column-->
+          <div class="col-md-6 white-text text-center text-md-left mt-xl-5 mb-5 wow fadeInLeft" data-wow-delay="0.3s">
+            <h1 class="h1-responsive font-weight-bold mt-sm-5">Welcome to Trip Plan</h1>
+            <hr class="hr-light">
+            <div *ngIf="!importStat">
+                <h4 class="mb-4">Pick a choice please</h4>
+
+            <button type="button" class="btnCustom"  (click)="updateGraph()" *ngIf="allow" >Start to plan a new trip</button>
+            <button type="button" class="btnCustom" (click)="importChoose()" *ngIf="allow" >continue your trip</button>
+          </div>
+            <app-import-csv  *ngIf="importStat" (onImportComplete)="onImportComplete($event)"></app-import-csv>
+
+          <!--Grid column-->
+          <!--Grid column-->
+   
+          <!--Grid column-->
+        </div>
+        <!--Grid row-->
+      </div>
+      <!-- Content -->
     </div>
-  </nav>
-  
+    <!-- Mask & flexbox options-->
+  </div>
+ 
+  <nav class="navbar navbar-dark bg-dark fixed-bottom " *ngIf="!root">
+      <div class="navbar-expand m-auto navbar-text">
+       Organize <i class="fa fa-heart"></i> Your Trip 
+      </div>
+    </nav>

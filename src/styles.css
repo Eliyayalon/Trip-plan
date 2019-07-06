@@ -2,3 +2,14 @@
 .vis-item.disabled{
     background-color: gray;
   }
+  
+  
+  .vis-odd
+  {
+    background:linear-gradient(to right, #074C00, #42A341, #B8E2A3);
+  }
+
+  .vis-item.enabled{
+    background:linear-gradient(to right, #040404, #000000, #656565);
+    color:white;
+  }

@@ -10,7 +10,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
 import bsCustomFileInput from 'bs-custom-file-input'
-
+import * as moment from 'moment';
 @Component({
   selector: 'app-vistimeline',
   templateUrl: './vistimeline.component.html',
@@ -53,7 +53,10 @@ toggleDisabled()
   fatherItem: string[];
   selectedNode:Node=null;
   descriptionIsAllow:boolean=false;
-
+  importStat:boolean=false;
+  showItemDet:boolean=false;
+   convertedDateStart;
+   convertedDateEnd;
   constructor(public nodeService: NodeService)
   {
 
@@ -80,7 +83,21 @@ onImportComplete(newRoot: Node) {
 
 enableDescription()
 {
-  this.descriptionIsAllow=true;
+  if( this.descriptionIsAllow==false)
+  {
+    this.descriptionIsAllow=true;
+
+  }
+  else
+  {
+    this.descriptionIsAllow=false;
+
+  }
+}
+importChoose()
+{  
+  this.importStat=true;
+
 }
 
 
@@ -96,17 +113,28 @@ enableDescription()
 
     this.timeline.on('select', (properties) => {
       this.descriptionIsAllow=false;
+      this.showItemDet=false;
       var id = properties.items[0];
       this.selectedNode=this.nodeService.findNode(id,this.root);
       this.model.editorData=this.selectedNode.description;
-
+    
     })
  
   }
 
 
-///////////////////////////////////// Update Parents Timelins  ///////////////////////////////////////////////
 
+      
+changeName()
+{
+  var currentItem = prompt('Enter Item Name Please:');
+  var id=this.timeline.getSelection();
+  const tree=this.nodeService.findNode(id[0],this.root);
+  tree.content=currentItem;
+
+}
+
+///////////////////////////////////// Update Parents Timeline  ///////////////////////////////////////////////
 
   updateParentsTimeline(parent: Node){
     if (parent!= null && !parent.isRoot){
@@ -139,7 +167,15 @@ enableDescription()
 }
 
 
+/* Set the width of the side navigation to 250px */
+ openNav() {
+  document.getElementById("mySidenav").style.width = "250px";
+}
 
+/* Set the width of the side navigation to 0 */
+ closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+}
   ///////////////////////////////////// Disable Enable Tree  ///////////////////////////////////////////////
 
   disableEnableTree(node:Node,enabled:boolean)
@@ -248,6 +284,25 @@ findContent()
     this.updateTreePrice(tree.parent);
   }
 
+
+  showItemDetails()
+  {
+    if( this.showItemDet==false)
+    {
+      this.showItemDet=true;
+      this.convertedDateStart = moment( this.selectedNode.start).format('DD/MM/YYYY HH:mm');;
+      this.convertedDateEnd = moment( this.selectedNode.end).format('DD/MM/YYYY HH:mm');;
+  
+
+    }
+    else
+    {
+      this.showItemDet=false;
+
+    }
+  
+  }
+
 ///////////////////////////////////// Get TimeLine Data ///////////////////////////////////////////////
 
   getTimelineData() 
@@ -346,12 +401,11 @@ findContent()
         this.updateParentsTimeline(newItem.parent);
         callback(newItem);
 },
-      
 
 ///////////////////////////////////// On Update ///////////////////////////////////////////////
 
       onUpdate:  (item, callback)=> { //change name of item
-        item.content = prompt('Edit items text:', item.content);
+        item.content = prompt('Enter Item Name Please:', item.content);
         
         if (item.content != null) 
         {
