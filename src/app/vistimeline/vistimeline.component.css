@@ -10,21 +10,66 @@
 
 }
 
-.vis-item.vis-item.vis-range.red.vis-editable{
-    border-color: orange;
-    background-color: yellow;
-  }
+h4
+,h1
+{
+  color:black;
+
+}
+.btn.btn-primary
+{
+  color:white;
+  background-color: #343A40;
+}
+
   .vis-time-axis .grid.vis-odd {
     background: #c7c2c2;
   }
-  .vis-item {
-    border-color: orange;
-    background-color: yellow;
-  }
-#timeline .v .vis-item-content
-{
-    color:red;
-    background-color: red;
+ 
 
+.vis-time-axis
+{
+  background-color: blue;
+}
+
+
+
+.view {
+  height: 80%;
+}
+
+
+
+.vis-item.disabled{
+  background-color: gray;
+}
+/* Required for full background image */
+
+.navbar-btn
+{
+  margin: 5px;
+  border-style:hidden;
+  border: 2px solid #343A40;
+}
+.btnCustom
+
+{
+    margin: 10px;
+    padding: 10px;
 
 }
+.btn-white {
+  color: black !important;
+}
+
+h6 {
+  line-height: 1.7;
+}
+.rgba-gradient {
+  background: -moz-linear-gradient(45deg, rgba(42, 27, 161, 0.7), rgba(29, 210, 177, 0.7) 100%);
+  background: -webkit-linear-gradient(45deg, rgba(42, 27, 161, 0.7), rgba(29, 210, 177, 0.7) 100%);
+  background: -webkit-linear-gradient(45deg, from(rgba(42, 27, 161, 0.7)), to(rgba(29, 210, 177, 0.7)));
+  background: -o-linear-gradient(45deg, rgba(42, 27, 161, 0.7), rgba(29, 210, 177, 0.7) 100%);
+  background: linear-gradient(to 45deg, rgba(42, 27, 161, 0.7), rgba(29, 210, 177, 0.7) 100%);
+}/* The side navigation menu */
+

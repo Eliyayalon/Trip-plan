@@ -5,7 +5,7 @@ import {Node} from './models/models';
   providedIn: 'root'
 })
 export class NodeService {
-
+  public allowToCreate:boolean=true;
   public findNode = (nodeId: string, root?: Node): Node => {
     if (root.id === nodeId) {
       return root;

@@ -1,34 +1,140 @@
-<div id="timeline" #visjsTimeline></div>
+<nav class="navbar navbar-dark bg-dark mb-3">
 
-<input type="button" (click)="updateGraph()" value="create timeline">
+        <a class="navbar-brand" href="/">Trip Plan</a>
+        <div class="navbar-expand mr-auto">
+          <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/">Home</a>
+            <a class="nav-item nav-link" target="_blank" href="https://www.google.com/maps">Map</a>
+            <a class="nav-item nav-link" target="_blank" href="https://www.skyscanner.co.il">Flights</a>
+            
+          </div>
+        </div>
+        <div class="navbar-expand ml-auto navbar-nav">
+        <!-- Dropdown -->
+   <!-- Example single danger button -->
+
+         <div class="navbar-nav">
+            <a class="nav-item nav-link"  target="_blank">
+                    <app-export-csv *ngIf="root" [root]="root"></app-export-csv>
+                </a>
+            
+          
+          </div>
+        </div>
+        <form *ngIf="root" class="form-inline my-2 my-lg-0">
+                <input (keyup)="onKey($event)" class="form-control mr-sm-2" type="search" placeholder="Enter a place" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit" (click)="findContent()">Search </button>
+        </form>
+      </nav>
+
+
+
+
+
+      <div id="timeline" #visjsTimeline>
+        
+      </div>
+
 
 <div *ngIf="root">
-<label>find place</label>
-<input (keyup)="onKey($event)">
-<button class="btn btn-primary" (click)="findContent()">find</button>
-<button class="btn btn-primary" (click)="disableEnableActivity(false)">disable</button>
-<button class="btn btn-primary" (click)="disableEnableActivity(true)">enable</button>
-<button class="btn btn-primary" (click)="setPrice()">set price</button>
+  <nav *ngIf="root" class="navbar navbar-light bg-light">
+    <form class="form-inline">
+        <button  [disabled]="!selectedNode" class="btn btn-primary navbar-btn" (click)="changeName()">Change Name</button>
 
+      <button [disabled]="!selectedNode" class="btn btn-primary navbar-btn" (click)="setPrice()">Set Price</button>
+<button  [disabled]="!selectedNode" class="btn btn-primary navbar-btn" (click)="enableDescription()">Insert Description</button>
+<button  [disabled]="!selectedNode" class="btn btn-primary navbar-btn" (click)="showItemDetails()">Show/Hide Details</button>
+<button [disabled]="!selectedNode" *ngIf="selectedNode.isEnabled" class="btn btn-danger navbar-btn" (click)="disableEnableActivity()">Disable</button>
+<button [disabled]="!selectedNode"  *ngIf="!selectedNode.isEnabled" class="btn btn-success navbar-btn" (click)="disableEnableActivity()">Enable</button>
 
-
-<ckeditor [(ngModel)]="model.editorData" [disabled]="isDisabled" [editor]="Editor" (change)="onChange($event)"></ckeditor>
+    </form>
+  </nav>
+  
+<br>
+<div *ngIf="descriptionIsAllow">
+    <label>Enter A Description</label>
+<br>
+<ckeditor tagName="textarea" [(ngModel)]="model.editorData" [disabled]="isDisabled" [editor]="Editor" (change)="onChange($event)"></ckeditor>
 <button (click)="toggleDisabled()">
     {{ isDisabled ? 'Enable editor' : 'Disable editor' }}
 </button>
-
-
-
-<div *ngIf="selectedNode">
-    <p>Price: {{selectedNode.price}}</p>
-    <p>Start Date: {{selectedNode.start}}</p>
-    <p>End Date: {{selectedNode.end}}</p>
-
-    </div>
-    <div *ngIf="root">
-            <p>total price {{root.price}} </p>
-    </div>
-    <app-export-csv [root]="root"></app-export-csv>
-    
+<hr>
 
 </div>
+
+<div *ngIf="showItemDet">
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col">Price Of Item</th>
+        <th scope="col">Start Date</th>
+        <th scope="col">End Date</th>
+        <th scope="col">Status</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row"></th>
+        <td>{{selectedNode.content}}</td>
+        <td>{{selectedNode.price}}</td>
+        <td>{{convertedDateStart}}</td>
+        <td>{{convertedDateEnd}}</td>
+        <td *ngIf=selectedNode.isEnabled>Approved</td>
+        <td *ngIf=!selectedNode.isEnabled>Cancelled</td>
+
+      </tr>
+      
+    
+    </tbody>
+  </table>
+
+</div>
+
+
+    <div *ngIf="root">
+            <li>Total price of Trip: {{root.price}} </li>
+  </div>
+  </div>
+
+    <!-- Full Page Intro -->
+    <!-- <div *ngIf="!root" class="view" style="background-image: url('https://www.intrepidtravel.com/adventures/wp-content/uploads/2017/11/stefan-machler-440749-1170x658.jpg'); background-repeat: no-repeat; background-size: cover; background-position: center center;">-->
+
+   <div *ngIf="!root" class="view" style="background-image: url('https://travel.home.sndimg.com/content/dam/images/travel/stock/2018/10/30/iStock_846088202_ChrisBoswell_Badlands_USRoadTripRoutes.jpg.rend.hgtvcom.966.644.suffix/1540915995809.jpeg'); background-repeat: no-repeat; background-size: cover; background-position: center center;"> 
+    <!-- Mask & flexbox options-->
+      <!-- Content -->
+      <div class="container">
+        <!--Grid row-->
+        <div class="row">
+          <!--Grid column-->
+          <div class="col-md-6 white-text text-center text-md-left mt-xl-5 mb-5 wow fadeInLeft" data-wow-delay="0.3s">
+            <h1 class="h1-responsive font-weight-bold mt-sm-5">Welcome to Trip Plan</h1>
+            <hr class="hr-light">
+            <div *ngIf="!importStat">
+                <h4 class="mb-4">Pick a choice please</h4>
+
+            <button type="button" class="btnCustom"  (click)="updateGraph()" *ngIf="allow" >Start to plan a new trip</button>
+            <button type="button" class="btnCustom" (click)="importChoose()" *ngIf="allow" >continue your trip</button>
+          </div>
+            <app-import-csv  *ngIf="importStat" (onImportComplete)="onImportComplete($event)"></app-import-csv>
+
+          <!--Grid column-->
+          <!--Grid column-->
+   
+          <!--Grid column-->
+        </div>
+        <!--Grid row-->
+      </div>
+      <!-- Content -->
+    </div>
+    <!-- Mask & flexbox options-->
+  </div>
+ 
+  <nav class="navbar navbar-dark bg-dark fixed-bottom " *ngIf="!root">
+      <div class="navbar-expand m-auto navbar-text">
+       Organize <i class="fa fa-heart"></i> Your Trip 
+      </div>
+    </nav>

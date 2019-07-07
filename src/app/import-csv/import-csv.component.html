@@ -1,6 +1,8 @@
-<!-- <button (click)="importCsvButtonHandler()" >Import CSV Data</button> -->
-<input id="file-upload" 
-type="file" 
-accept=".csv" 
-(change)="fileUpload($event)">
 
+<!-- <button (click)="importCsvButtonHandler()" >Import CSV Data</button> -->
+
+<input  id="file-upload"  	 name="import timeline" [disabled]="!allowToImport"
+            accept=".csv" 
+            (change)="fileUpload($event)" type="file"  placeholder="Choose File" class="s">
+
+            
