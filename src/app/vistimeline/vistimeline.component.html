@@ -39,13 +39,13 @@
 <div *ngIf="root">
   <nav *ngIf="root" class="navbar navbar-light bg-light">
     <form class="form-inline">
-        <button  [disabled]="!selectedNode" class="btn btn-primary navbar-btn" (click)="changeName()">change Name</button>
+        <button  [disabled]="!selectedNode" class="btn btn-primary navbar-btn" (click)="changeName()">Change Name</button>
 
       <button [disabled]="!selectedNode" class="btn btn-primary navbar-btn" (click)="setPrice()">Set Price</button>
 <button  [disabled]="!selectedNode" class="btn btn-primary navbar-btn" (click)="enableDescription()">Insert Description</button>
 <button  [disabled]="!selectedNode" class="btn btn-primary navbar-btn" (click)="showItemDetails()">Show/Hide Details</button>
-<button [disabled]="!selectedNode" class="btn btn-danger navbar-btn" (click)="disableEnableActivity(false)">Disable</button>
-<button [disabled]="!selectedNode" class="btn btn-success navbar-btn" (click)="disableEnableActivity(true)">Enable</button>
+<button [disabled]="!selectedNode" *ngIf="selectedNode.isEnabled" class="btn btn-danger navbar-btn" (click)="disableEnableActivity()">Disable</button>
+<button [disabled]="!selectedNode"  *ngIf="!selectedNode.isEnabled" class="btn btn-success navbar-btn" (click)="disableEnableActivity()">Enable</button>
 
     </form>
   </nav>
@@ -53,22 +53,51 @@
 <br>
 <div *ngIf="descriptionIsAllow">
     <label>Enter A Description</label>
-
+<br>
 <ckeditor tagName="textarea" [(ngModel)]="model.editorData" [disabled]="isDisabled" [editor]="Editor" (change)="onChange($event)"></ckeditor>
 <button (click)="toggleDisabled()">
     {{ isDisabled ? 'Enable editor' : 'Disable editor' }}
 </button>
+<hr>
+
 </div>
 
 <div *ngIf="showItemDet">
-    <li>Price: {{selectedNode.price}}</li>
-    <li>Start Date: {{convertedDateStart}}</li>
-    <li>End Date: {{convertedDateEnd}}</li>
 
-    </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col">Price Of Item</th>
+        <th scope="col">Start Date</th>
+        <th scope="col">End Date</th>
+        <th scope="col">Status</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row"></th>
+        <td>{{selectedNode.content}}</td>
+        <td>{{selectedNode.price}}</td>
+        <td>{{convertedDateStart}}</td>
+        <td>{{convertedDateEnd}}</td>
+        <td *ngIf=selectedNode.isEnabled>Approved</td>
+        <td *ngIf=!selectedNode.isEnabled>Cancelled</td>
+
+      </tr>
+      
+    
+    </tbody>
+  </table>
+
+</div>
+
+
     <div *ngIf="root">
             <li>Total price of Trip: {{root.price}} </li>
-    </div>
+  </div>
   </div>
 
     <!-- Full Page Intro -->

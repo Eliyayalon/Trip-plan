@@ -3,7 +3,7 @@ import { Node } from '../models/models';
 import { NodeService } from '../node.service';
 import { debug } from 'util';
 import { getDate } from 'ngx-bootstrap/chronos/utils/date-getters';
-import { typeSourceSpan } from '@angular/compiler';
+import { typeSourceSpan, ThrowStmt } from '@angular/compiler';
 import { ExportToCsv } from 'export-to-csv';
 declare var vis: any;
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
@@ -37,10 +37,7 @@ public model =
 
 public isDisabled = false;
    
-toggleDisabled() 
-    {
-        this.isDisabled = !this.isDisabled
-    }
+
 
   public Editor = ClassicEditor;
   @ViewChild("visjsTimeline") timelineContainer: ElementRef;
@@ -57,6 +54,9 @@ toggleDisabled()
   showItemDet:boolean=false;
    convertedDateStart;
    convertedDateEnd;
+   description:String;
+   disableButton:boolean=false;
+
   constructor(public nodeService: NodeService)
   {
 
@@ -72,13 +72,23 @@ toggleDisabled()
    
   }
 
-///////////////////////////////////// Update Graph   ///////////////////////////////////////////////
 
+///////////////////////////////////// On Import Complete ///////////////////////////////////////////////
 
-onImportComplete(newRoot: Node) {
-  this.root = newRoot;
-  this.updateGraph();
-}
+  onImportComplete(newRoot: Node) 
+  {
+    this.root = newRoot;
+    this.updateGraph();
+  }
+
+///////////////////////////////////// Toggle Disabled   ///////////////////////////////////////////////
+  
+  toggleDisabled() 
+  {
+    this.isDisabled = !this.isDisabled
+  }
+
+///////////////////////////////////// Enable Description  ///////////////////////////////////////////////
 
 
 enableDescription()
@@ -94,11 +104,16 @@ enableDescription()
 
   }
 }
+
+///////////////////////////////////// Import Choose  ///////////////////////////////////////////////
+
+
 importChoose()
 {  
   this.importStat=true;
 
 }
+///////////////////////////////////// Update Graph  ///////////////////////////////////////////////
 
 
   updateGraph() 
@@ -117,12 +132,13 @@ importChoose()
       var id = properties.items[0];
       this.selectedNode=this.nodeService.findNode(id,this.root);
       this.model.editorData=this.selectedNode.description;
-    
+      this.description=this.selectedNode.description;
     })
  
   }
 
 
+///////////////////////////////////// Change Name  ///////////////////////////////////////////////
 
       
 changeName()
@@ -164,18 +180,11 @@ changeName()
  {
     const rich = editor.getData();
     this.selectedNode.description=rich;
+    console.log(rich);
 }
 
 
-/* Set the width of the side navigation to 250px */
- openNav() {
-  document.getElementById("mySidenav").style.width = "250px";
-}
 
-/* Set the width of the side navigation to 0 */
- closeNav() {
-  document.getElementById("mySidenav").style.width = "0";
-}
   ///////////////////////////////////// Disable Enable Tree  ///////////////////////////////////////////////
 
   disableEnableTree(node:Node,enabled:boolean)
@@ -187,8 +196,10 @@ changeName()
       for (var i=0; i<node.children.length; i++){
         this.disableEnableTree(node.children[i], enabled);
       }
+        
+          this.updateTreePrice(node.parent);
 
-      this.updateTreePrice(node.parent);
+        
     }
 
   }
@@ -232,12 +243,21 @@ findContent()
 ///////////////////////////////////// Disable Enable Activity ///////////////////////////////////////////////
 
   
-  disableEnableActivity(enabled:boolean)
+  disableEnableActivity()
   {
+    if(this.selectedNode.isEnabled==true)
+    {
     var id=this.timeline.getSelection();
-    console.log(id[0]);
     const tree=this.nodeService.findNode(id[0],this.root);
-    this.disableEnableTree(tree,enabled);
+    this.disableEnableTree(tree,false);
+    }
+    else if(this.selectedNode.isEnabled==false)
+    {
+      var id=this.timeline.getSelection();
+      const tree=this.nodeService.findNode(id[0],this.root);
+      this.disableEnableTree(tree,true);
+
+    }
   }
 
 ///////////////////////////////////// Update Tree Price ///////////////////////////////////////////////
@@ -290,8 +310,8 @@ findContent()
     if( this.showItemDet==false)
     {
       this.showItemDet=true;
-      this.convertedDateStart = moment( this.selectedNode.start).format('DD/MM/YYYY HH:mm');;
-      this.convertedDateEnd = moment( this.selectedNode.end).format('DD/MM/YYYY HH:mm');;
+      this.convertedDateStart = moment( this.selectedNode.start).format('DD/MM/YYYY, HH:mm');;
+      this.convertedDateEnd = moment( this.selectedNode.end).format('DD/MM/YYYY, HH:mm');;
   
 
     }

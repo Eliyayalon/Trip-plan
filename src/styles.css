@@ -6,7 +6,7 @@
   
   .vis-odd
   {
-    background:linear-gradient(to right, #074C00, #42A341, #B8E2A3);
+    background:linear-gradient(to right, rgb(20, 95, 12), #42A341, rgb(186, 231, 163));
   }
 
   .vis-item.enabled{
