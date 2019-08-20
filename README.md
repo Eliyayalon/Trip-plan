@@ -6,3 +6,5 @@ Fill in the features of the activities such as travel time price and so on.<br>
 The service will be able to report statistics to the user As the total cost of the proposed trip.<br>
 The interface will also provide a convenient way to conduct and edit your trip and compare different travel plans.<br>
 The service will be able to export the program to Google Calendar and google maps and share your trip plan with other people.
+<br>
+demo https://trip-plan-80.firebaseapp.com/
