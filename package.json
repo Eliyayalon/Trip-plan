@@ -28,7 +28,7 @@
     "core-js": "^2.6.9",
     "export-to-csv": "^0.2.1",
     "igniteui-angular": "^7.3.8",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "ngx-bootstrap": "^3.3.0",
     "rxjs": "~6.3.3",
     "timeline-plus": "^2.4.0",
